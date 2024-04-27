@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductCategoryMenuComponent } from './components/product-category-menu/product-category-menu.component';
 import { SearchComponent } from './components/search/search.component';
@@ -15,6 +15,7 @@ import { ProductService } from './service/product.service';
     ProductCategoryMenuComponent,
     SearchComponent,
     CartStatusComponent,
+    RouterLink,
   ],
   providers: [ProductService],
   templateUrl: './app.component.html',
