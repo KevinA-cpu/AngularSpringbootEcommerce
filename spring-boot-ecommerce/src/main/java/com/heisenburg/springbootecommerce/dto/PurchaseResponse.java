@@ -1,2 +1,10 @@
-package com.heisenburg.springbootecommerce.dto;public class PurchaseResponse {
+package com.heisenburg.springbootecommerce.dto;
+
+import lombok.Data;
+import lombok.NonNull;
+
+@Data
+public class PurchaseResponse {
+    @NonNull
+    private String orderTrackingNumber;
 }

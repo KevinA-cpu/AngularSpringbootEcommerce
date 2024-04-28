@@ -1,4 +1,4 @@
-package controller;
+package com.heisenburg.springbootecommerce.controller;
 
 import com.heisenburg.springbootecommerce.dto.Purchase;
 import com.heisenburg.springbootecommerce.dto.PurchaseResponse;
