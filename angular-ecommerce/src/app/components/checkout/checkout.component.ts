@@ -9,6 +9,7 @@ import {
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { ShopValidators } from '../../validators/shop-validators';
 import { ShopFormService } from '../../service/shop-form.service';
+import { CartService } from '../../service/cart.service';
 import { Country } from '../../common/country';
 import { State } from '../../common/state';
 @Component({
@@ -33,10 +34,13 @@ export class CheckoutComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private shopFormService: ShopFormService
+    private shopFormService: ShopFormService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
+    this.reviewCartDetails();
+
     this.checkoutFormGroup = new FormGroup({
       customer: this.formBuilder.group({
         firstName: new FormControl('', [
@@ -125,6 +129,13 @@ export class CheckoutComponent {
     this.shopFormService.getCountries().subscribe((data) => {
       this.countries = data;
     });
+  }
+
+  reviewCartDetails() {
+    this.cartService.totalPrice.subscribe((data) => (this.totalPrice = data));
+    this.cartService.totalQuantity.subscribe(
+      (data) => (this.totalQuantity = data)
+    );
   }
 
   get firstName() {
