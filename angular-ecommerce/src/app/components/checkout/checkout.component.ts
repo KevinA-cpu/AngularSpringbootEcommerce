@@ -10,8 +10,14 @@ import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { ShopValidators } from '../../validators/shop-validators';
 import { ShopFormService } from '../../service/shop-form.service';
 import { CartService } from '../../service/cart.service';
+import { CheckoutService } from '../../service/checkout.service';
 import { Country } from '../../common/country';
 import { State } from '../../common/state';
+import { Router } from '@angular/router';
+import { Order } from '../../common/order';
+import { OrderItem } from '../../common/order-item';
+import { Purchase } from '../../common/purchase';
+
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -35,7 +41,9 @@ export class CheckoutComponent {
   constructor(
     private formBuilder: FormBuilder,
     private shopFormService: ShopFormService,
-    private cartService: CartService
+    private cartService: CartService,
+    private checkoutService: CheckoutService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -208,6 +216,64 @@ export class CheckoutComponent {
     if (this.checkoutFormGroup.invalid) {
       this.checkoutFormGroup.markAllAsTouched();
     }
+
+    const order = new Order();
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
+
+    const orderItems: OrderItem[] = this.cartService.cartItems.map(
+      (tempCartItem) => new OrderItem(tempCartItem)
+    );
+
+    const purchase = new Purchase();
+    purchase.customer = this.checkoutFormGroup.controls['customer'].value;
+    purchase.shippingAddress =
+      this.checkoutFormGroup.controls['shippingAddress'].value;
+    const shippingAddressState: State = JSON.parse(
+      JSON.stringify(purchase.shippingAddress.state)
+    );
+    const shippingAddressCountry: Country = JSON.parse(
+      JSON.stringify(purchase.shippingAddress.country)
+    );
+    purchase.shippingAddress.state = shippingAddressState.name;
+    purchase.shippingAddress.country = shippingAddressCountry.name;
+
+    purchase.billingAddress =
+      this.checkoutFormGroup.controls['billingAddress'].value;
+    const billingAddressState: State = JSON.parse(
+      JSON.stringify(purchase.billingAddress.state)
+    );
+    const billingAddressCountry: Country = JSON.parse(
+      JSON.stringify(purchase.billingAddress.country)
+    );
+    purchase.billingAddress.state = billingAddressState.name;
+    purchase.billingAddress.country = billingAddressCountry.name;
+
+    purchase.order = order;
+    purchase.orderItems = orderItems;
+
+    this.checkoutService.placeOrder(purchase).subscribe({
+      next: (response) => {
+        alert(
+          `Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`
+        );
+
+        this.resetCart();
+      },
+      error: (err) => {
+        alert(`There was an error: ${err.message}`);
+      },
+    });
+  }
+
+  resetCart() {
+    this.cartService.cartItems = [];
+    this.cartService.totalPrice.next(0);
+    this.cartService.totalQuantity.next(0);
+
+    this.checkoutFormGroup.reset();
+
+    this.router.navigateByUrl('/products');
   }
 
   handleMonthsAndYears() {
