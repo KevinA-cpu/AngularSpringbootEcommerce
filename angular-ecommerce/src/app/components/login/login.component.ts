@@ -1,10 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { DOCUMENT, NgIf, AsyncPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-auth-button',
-  imports: [NgIf, AsyncPipe],
+  imports: [NgIf, AsyncPipe, RouterLink],
   template: `<ng-container
       *ngIf="auth.isAuthenticated$ | async; else loggedOut"
     >
@@ -22,6 +23,10 @@ import { DOCUMENT, NgIf, AsyncPipe } from '@angular/common';
           "
         >
           Log out
+        </button>
+
+        <button routerLink="/members" class="au-btn-submit py-2 ms-1">
+          Member
         </button>
       </div>
     </ng-container>
