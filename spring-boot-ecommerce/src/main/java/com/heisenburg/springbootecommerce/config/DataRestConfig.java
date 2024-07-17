@@ -1,9 +1,6 @@
 package com.heisenburg.springbootecommerce.config;
 
-import com.heisenburg.springbootecommerce.entity.Country;
-import com.heisenburg.springbootecommerce.entity.Product;
-import com.heisenburg.springbootecommerce.entity.ProductCategory;
-import com.heisenburg.springbootecommerce.entity.State;
+import com.heisenburg.springbootecommerce.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.EntityType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +39,7 @@ public class DataRestConfig implements RepositoryRestConfigurer {
         disableHttpMethods(ProductCategory.class, config, unsupportedActions);
         disableHttpMethods(Country.class, config, unsupportedActions);
         disableHttpMethods(State.class, config, unsupportedActions);
+        disableHttpMethods(Order.class,config,unsupportedActions);
 
         exposeIds(config);
 

@@ -28,6 +28,10 @@ import { RouterLink } from '@angular/router';
         <button routerLink="/members" class="au-btn-submit py-2 ms-1">
           Member
         </button>
+
+        <button routerLink="/order-history" class="au-btn-submit py-2 ms-1">
+          Orders
+        </button>
       </div>
     </ng-container>
 
